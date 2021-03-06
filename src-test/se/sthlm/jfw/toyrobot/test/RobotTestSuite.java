@@ -5,9 +5,9 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	RobotTest.class,
-	RobotUnitTest.class,
-	RobotNegativeTest.class
+  RobotTest.class,
+  RobotUnitTest.class,
+  RobotNegativeTest.class
 })
 
 public class RobotTestSuite {
