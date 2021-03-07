@@ -27,21 +27,21 @@ public class RobotTest {
 
   @Test
   public void testInputA() {
-    String[] inputData = {"testInputA.txt"};
+    String[] inputData = {"/testInputA.txt"};
     Robot.main(inputData);
     assertEquals("0, 1, NORTH\r\n", outContent.toString());
   }
 
   @Test
   public void testInputB() {
-    String[] inputData = {"testInputB.txt"};
+    String[] inputData = {"/testInputB.txt"};
     Robot.main(inputData);
     assertEquals("0, 0, WEST\r\n", outContent.toString());
   }
 
   @Test
   public void testInputC() {
-    String[] inputData = {"testInputC.txt"};
+    String[] inputData = {"/testInputC.txt"};
     Robot.main(inputData);
     assertEquals("3, 3, NORTH\r\n", outContent.toString());
   }

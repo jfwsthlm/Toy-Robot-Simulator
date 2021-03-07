@@ -9,6 +9,5 @@ import org.junit.runners.Suite;
   RobotUnitTest.class,
   RobotNegativeTest.class
 })
-
 public class RobotTestSuite {
 }
