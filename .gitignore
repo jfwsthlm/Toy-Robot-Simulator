@@ -2,4 +2,4 @@ bazel-bin
 bazel-out
 bazel-testlogs
 bazel-toy-robot-simulator
-third-party
+third_party
