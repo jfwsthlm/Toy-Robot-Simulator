@@ -118,7 +118,7 @@ public class Robot {
         this.report();
       }
     } else {
-      System.out.println(Message.ERROR_UNKNOWN_COMMAND);
+      System.out.println(Message.ERROR_UNKNOWN_COMMAND + ": " + firstPartOfCommand);
     }
     return validPlaceCommandHasBeenIssued;
   }
