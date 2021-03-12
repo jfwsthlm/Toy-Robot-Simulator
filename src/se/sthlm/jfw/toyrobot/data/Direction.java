@@ -1,61 +1,39 @@
 package se.sthlm.jfw.toyrobot.data;
 
-public class Direction {
-  public static int SOUTH = 0;
-  public static int WEST = 1;
-  public static int NORTH = 2;
-  public static int EAST = 3;
-  public static int INVALID_DIRECTION = -1;
+public enum Direction {
+  SOUTH(0, "SOUTH"),
+  WEST(1, "WEST"),
+  NORTH(2, "NORTH"),
+  EAST(3, "EAST"),
+  INVALID_DIRECTION(-1, "INVALID");
+      
+  public final int directionValue;
+  public final String directionString;
 
-  public static int getDirection(int direction) {
-    if(direction == 0) {
-      return SOUTH;
-    }
-    if(direction == 1) {
-      return WEST;
-    }
-    if(direction == 2) {
-      return NORTH;
-    }
-    if(direction == 3) {
-      return EAST;
-    }
-    return -1;
+  private Direction(int directionValue, String directionString) {
+    this.directionValue = directionValue;
+    this.directionString = directionString;
   }
 
-  public static int getDirection(String direction) {
-    if(direction.equals(Message.SOUTH)) {
-      return SOUTH;
+  public static Direction getDirection(String directionString) {
+    for (Direction directionElement : values()) {
+      if (directionElement.directionString.equals(directionString)) {
+        return directionElement;
+      }
     }
-    if(direction.equals(Message.WEST)) {
-      return WEST;
-    }
-    if(direction.equals(Message.NORTH)) {
-      return NORTH;
-    }
-    if(direction.equals(Message.EAST)) {
-      return EAST;
-    }
-    return -1;
+    return INVALID_DIRECTION;
   }
 
-  public static String getDirectionString(int direction) {
-    if(direction == 0) {
-      return Message.SOUTH;
+  public static Direction getDirection(int directionValue) {
+    for (Direction directionElement : values()) {
+      if (directionElement.directionValue == directionValue) {
+        return directionElement;
+      }
     }
-    if(direction == 1) {
-      return Message.WEST;
-    }
-    if(direction == 2) {
-      return Message.NORTH;
-    }
-    if(direction == 3) {
-      return Message.EAST;
-    }
-    return Message.INVALID;
+    return INVALID_DIRECTION;
   }
 
-  public static boolean isDirectionValid(int direction) {
-    return getDirection(direction) != INVALID_DIRECTION;
+  public static boolean isDirectionValid(Direction direction) {
+    return direction != Direction.INVALID_DIRECTION;
   }
 }

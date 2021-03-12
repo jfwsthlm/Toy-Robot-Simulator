@@ -17,7 +17,7 @@ public class Table {
     return height;
   }
 
-  public boolean positionIsWithinTable(Position position) {
+  public boolean isPositionWithinTable(Position position) {
     if(position.getXPos() < 0) {
       return false;
     }

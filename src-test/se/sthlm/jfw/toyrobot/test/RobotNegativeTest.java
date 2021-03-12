@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import se.sthlm.jfw.toyrobot.Robot;
+import se.sthlm.jfw.toyrobot.data.Direction;
 
 public class RobotNegativeTest {
   private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -35,7 +36,7 @@ public class RobotNegativeTest {
   @Test
   public void testUnknownDirection() {
     Robot robot = new Robot();
-    assertFalse(robot.place(3, 2, 5));
+    assertFalse(robot.place(3, 2, Direction.INVALID_DIRECTION));
   }
 
 }

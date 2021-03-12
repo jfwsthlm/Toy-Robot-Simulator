@@ -15,7 +15,7 @@ public class Robot {
   
   private Table table;
   private Position position;
-  private int direction;
+  private Direction direction;
   private boolean validPlaceCommandHasBeenIssued;
 
   public Robot() {
@@ -29,29 +29,23 @@ public class Robot {
     validPlaceCommandHasBeenIssued = false;
   }
 
-  public boolean place(int xPos, int yPos, int direction) {
-    if(xPos >= table.getWidth()) {
-      return false;
-    }
-    if(xPos < 0) {
-      return false;
-    }
-    if(yPos >= table.getHeight()) {
-      return false;
-    }
-    if(yPos < 0) {
+  public boolean place(int xPos, int yPos, Direction direction) {
+    Position placePosition = new Position(xPos, yPos);
+    boolean placePositionIsWithinTable = table.isPositionWithinTable(placePosition);
+    if(!placePositionIsWithinTable) {
       return false;
     }
     if(!Direction.isDirectionValid(direction)) {
       return false;
     }
-    this.position = new Position(xPos, yPos);
+    this.position = placePosition;
     this.direction = direction;
+    this.validPlaceCommandHasBeenIssued = true;
     return true;
   }
 
   public boolean move() {
-    Position newPosition = this.position;
+    Position newPosition = new Position(this.position.getXPos(), this.position.getYPos());
     if(direction == Direction.SOUTH) {
       newPosition.setYPos(position.getYPos() - 1);
     }
@@ -64,59 +58,68 @@ public class Robot {
     if(direction == Direction.EAST) {
       newPosition.setXPos(position.getXPos() + 1);
     }
-    if(table.positionIsWithinTable(newPosition)) {
+    if(table.isPositionWithinTable(newPosition)) {
       this.position = newPosition;
-    } else {
-      return false;
+      return true;
     }
-    return true;
+    return false;
   }
 
   public boolean left() {
-    direction --;
-    if(direction < 0) {
-      direction = 3;
+    if(Direction.isDirectionValid(direction)) {
+      int newDirectionValue = direction.directionValue - 1;
+      if(newDirectionValue < 0) {
+        newDirectionValue = 3;
+      }
+      direction = Direction.getDirection(newDirectionValue);
+      return true;
     }
-    return true;
+    return false;
   }
 
   public boolean right() {
-    direction ++;
-    if(direction > 3) {
-      direction = 0;
+    if(Direction.isDirectionValid(direction)) {
+      int newDirectionValue = direction.directionValue + 1;
+      if(newDirectionValue > 3) {
+        newDirectionValue = 0;
+      }
+      direction = Direction.getDirection(newDirectionValue);
+      return true;
     }
-    return true;
+    return false;
   }
 
   public boolean report() {
-    System.out.println(this.position + ", " + Direction.getDirectionString(this.direction));
+    if(validPlaceCommandHasBeenIssued) {
+      System.out.println(this.position + ", " + this.direction.directionString);
+    } else {
+      System.out.println(Message.ERROR_NO_VALID_PLACE_COMMAND);
+    }
     return true;
   }
 
   private boolean operate(String robotCommand) {
     String firstPartOfCommand = robotCommand.split(" ")[0];
-    if(firstPartOfCommand.equals(Command.PLACE)) {
+    if(Command.PLACE == Command.getCommand(firstPartOfCommand)) {
       String secondPartOfCommand = robotCommand.split(" ")[1];
       int xPositionFromPlaceCommand = Integer.parseInt(secondPartOfCommand.split(",")[0]);
       int yPositionFromPlaceCommand = Integer.parseInt(secondPartOfCommand.split(",")[1]);
-      int directionFromPlaceCommand = Direction.getDirection(secondPartOfCommand.split(",")[2]);
-      validPlaceCommandHasBeenIssued = this.place(xPositionFromPlaceCommand, yPositionFromPlaceCommand, directionFromPlaceCommand);
-    } else if(firstPartOfCommand.equals(Command.MOVE)) {
+      Direction directionFromPlaceCommand = Direction.getDirection(secondPartOfCommand.split(",")[2]);
+      this.place(xPositionFromPlaceCommand, yPositionFromPlaceCommand, directionFromPlaceCommand);
+    } else if(Command.MOVE == Command.getCommand(firstPartOfCommand)) {
       if(validPlaceCommandHasBeenIssued) {
         this.move();
       }
-    } else if(firstPartOfCommand.equals(Command.LEFT)) {
+    } else if(Command.LEFT == Command.getCommand(firstPartOfCommand)) {
       if(validPlaceCommandHasBeenIssued) {
         this.left();
       }
-    } else if(firstPartOfCommand.equals(Command.RIGHT)) {
+    } else if(Command.RIGHT == Command.getCommand(firstPartOfCommand)) {
       if(validPlaceCommandHasBeenIssued) {
         this.right();
       }
-    } else if(firstPartOfCommand.equals(Command.REPORT)) {
-      if(validPlaceCommandHasBeenIssued) {
+    } else if(Command.REPORT == Command.getCommand(firstPartOfCommand)) {
         this.report();
-      }
     } else {
       System.out.println(Message.ERROR_UNKNOWN_COMMAND + ": " + firstPartOfCommand);
     }
@@ -127,11 +130,6 @@ public class Robot {
     try {
       if(args.length != 1) {
         System.out.println(Message.ERROR_WRONG_NUMBER_OF_ARGUMENTS);
-        return;
-      }
-
-      if(args[0].toLowerCase().equals("help")) {
-        System.out.println(Message.HELP_MESSAGE);
         return;
       }
 
